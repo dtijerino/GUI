@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GUI para Desarrollo Web | Sitio didáctico</title>
+  <style>
+    :root{
+      --bg:#f4f7fb;
+      --surface:#ffffff;
+      --surface-2:#eef3f9;
+      --text:#172033;
+      --muted:#5d6a7e;
+      --primary:#1957d2;
+      --primary-2:#103d99;
+      --accent:#00a884;
+      --warning:#d97706;
+      --danger:#c62828;
+      --border:#d9e1ec;
+      --shadow:0 16px 40px rgba(24,46,84,.10);
+      --radius:18px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.6;
+    }
+
+    body.dark{
+      --bg:#0f172a;
+      --surface:#172033;
+      --surface-2:#1e293b;
+      --text:#f8fafc;
+      --muted:#c3ccda;
+      --primary:#74a6ff;
+      --primary-2:#a9c6ff;
+      --accent:#5ee4c7;
+      --border:#334155;
+      --shadow:0 16px 40px rgba(0,0,0,.26);
+    }
+
+    a{color:inherit}
+    img{max-width:100%;display:block}
+
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:100;
+      backdrop-filter:blur(14px);
+      background:color-mix(in srgb, var(--surface) 88%, transparent);
+      border-bottom:1px solid var(--border);
+    }
+
+    .nav{
+      max-width:1180px;
+      margin:auto;
+      padding:12px 20px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+    }
+
+    .brand{
+      font-weight:800;
+      letter-spacing:.2px;
+      color:var(--primary);
+      white-space:nowrap;
+    }
+
+    .nav-links{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      gap:8px;
+    }
+
+    .nav-links a{
+      text-decoration:none;
+      padding:8px 10px;
+      border-radius:10px;
+      color:var(--muted);
+      font-size:.94rem;
+    }
+
+    .nav-links a:hover{
+      background:var(--surface-2);
+      color:var(--primary);
+    }
+
+    button, select, input{
+      font:inherit;
+    }
+
+    .btn{
+      border:0;
+      border-radius:12px;
+      padding:10px 16px;
+      cursor:pointer;
+      background:var(--primary);
+      color:white;
+      font-weight:700;
+      transition:.2s ease;
+    }
+
+    .btn:hover{transform:translateY(-1px);filter:brightness(1.04)}
+    .btn.secondary{background:var(--surface-2);color:var(--text);border:1px solid var(--border)}
+    .btn.success{background:var(--accent)}
+    .btn.warning{background:var(--warning)}
+    .btn.danger{background:var(--danger)}
+
+    .hero{
+      max-width:1180px;
+      margin:42px auto 20px;
+      padding:0 20px;
+    }
+
+    .hero-card{
+      background:linear-gradient(135deg, var(--primary), #203d78);
+      color:#fff;
+      border-radius:28px;
+      padding:46px;
+      box-shadow:var(--shadow);
+      display:grid;
+      grid-template-columns:1.3fr .7fr;
+      gap:30px;
+      align-items:center;
+      overflow:hidden;
+      position:relative;
+    }
+
+    .hero h1{
+      margin:0 0 12px;
+      font-size:clamp(2rem,4.5vw,4rem);
+      line-height:1.05;
+    }
+
+    .hero p{
+      margin:0 0 22px;
+      max-width:760px;
+      font-size:1.08rem;
+      color:#eaf1ff;
+    }
+
+    .hero-actions{display:flex;flex-wrap:wrap;gap:10px}
+    .hero .btn.secondary{background:white;color:#183b7a;border:0}
+
+    .hero-visual{
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.24);
+      border-radius:22px;
+      padding:18px;
+    }
+
+    .mock-window{
+      background:#fff;
+      color:#1f2937;
+      border-radius:16px;
+      overflow:hidden;
+      box-shadow:0 18px 36px rgba(0,0,0,.18);
+    }
+
+    .mock-bar{
+      background:#e7edf7;
+      padding:10px;
+      display:flex;
+      gap:7px;
+    }
+
+    .dot{width:11px;height:11px;border-radius:50%;background:#8ca0bc}
+    .mock-body{padding:18px}
+    .mock-chip{display:inline-block;padding:5px 10px;background:#e8f0ff;border-radius:999px;color:#174ea6;font-size:.82rem}
+    .mock-title{height:17px;background:#1d4ed8;border-radius:6px;margin:14px 0 8px;width:72%}
+    .mock-line{height:9px;background:#d8e0eb;border-radius:6px;margin:7px 0}
+    .mock-line.short{width:65%}
+    .mock-buttons{display:flex;gap:8px;margin-top:16px}
+    .mock-button{height:31px;border-radius:8px;background:#1957d2;flex:1}
+    .mock-button.alt{background:#cbd5e1}
+
+    main{
+      max-width:1180px;
+      margin:auto;
+      padding:10px 20px 70px;
+    }
+
+    .progress-wrap{
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:18px;
+      margin:22px 0 34px;
+      box-shadow:var(--shadow);
+    }
+
+    .progress-row{
+      display:flex;
+      justify-content:space-between;
+      gap:14px;
+      align-items:center;
+      margin-bottom:10px;
+    }
+
+    .progress{
+      width:100%;
+      height:12px;
+      background:var(--surface-2);
+      border-radius:99px;
+      overflow:hidden;
+    }
+
+    .progress > div{
+      height:100%;
+      width:0;
+      background:linear-gradient(90deg,var(--primary),var(--accent));
+      transition:width .35s ease;
+    }
+
+    section{
+      scroll-margin-top:90px;
+      margin:34px 0;
+    }
+
+    .section-card{
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:30px;
+    }
+
+    .kicker{
+      color:var(--primary);
+      text-transform:uppercase;
+      letter-spacing:.11em;
+      font-size:.78rem;
+      font-weight:800;
+    }
+
+    h2{
+      margin:.2rem 0 .7rem;
+      font-size:clamp(1.6rem,3vw,2.5rem);
+    }
+
+    h3{margin-top:0}
+    .lead{color:var(--muted);max-width:850px}
+
+    .grid{
+      display:grid;
+      gap:18px;
+    }
+
+    .grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .grid.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+
+    .card{
+      background:var(--surface-2);
+      border:1px solid var(--border);
+      border-radius:15px;
+      padding:18px;
+    }
+
+    .card strong{color:var(--primary)}
+
+    .code{
+      background:#111827;
+      color:#dbeafe;
+      border-radius:14px;
+      padding:18px;
+      overflow:auto;
+      font-family:Consolas, Monaco, monospace;
+      font-size:.93rem;
+      line-height:1.55;
+      border:1px solid #273449;
+      white-space:pre;
+    }
+
+    .demo{
+      border:1px dashed var(--border);
+      border-radius:14px;
+      padding:18px;
+      background:color-mix(in srgb, var(--surface) 82%, var(--surface-2));
+    }
+
+    .step{
+      display:grid;
+      grid-template-columns:44px 1fr;
+      gap:14px;
+      align-items:start;
+      margin:16px 0;
+    }
+
+    .step-number{
+      width:40px;
+      height:40px;
+      border-radius:12px;
+      display:grid;
+      place-items:center;
+      background:var(--primary);
+      color:#fff;
+      font-weight:800;
+    }
+
+    .tag{
+      display:inline-block;
+      font-size:.8rem;
+      padding:4px 9px;
+      border-radius:999px;
+      background:var(--surface-2);
+      border:1px solid var(--border);
+      color:var(--muted);
+      margin:2px;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      overflow:hidden;
+      border-radius:12px;
+    }
+
+    th,td{
+      border:1px solid var(--border);
+      padding:11px;
+      text-align:left;
+    }
+
+    th{background:var(--surface-2)}
+
+    .form-row{
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:10px;
+      align-items:end;
+    }
+
+    label{font-weight:700}
+    input,select{
+      width:100%;
+      padding:10px 12px;
+      border-radius:10px;
+      border:1px solid var(--border);
+      background:var(--surface);
+      color:var(--text);
+      margin-top:6px;
+    }
+
+    .result{
+      margin-top:12px;
+      padding:12px;
+      border-radius:10px;
+      background:var(--surface-2);
+      border:1px solid var(--border);
+      min-height:48px;
+    }
+
+    .demo-menu{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      background:var(--text);
+      color:var(--surface);
+      padding:12px;
+      border-radius:12px;
+    }
+
+    .demo-menu a{
+      color:inherit;
+      text-decoration:none;
+      padding:7px 11px;
+      border-radius:8px;
+      background:rgba(255,255,255,.09);
+    }
+
+    .image-demo{
+      border-radius:14px;
+      padding:22px;
+      min-height:220px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg,#e7f0ff,#e8fff8);
+      color:#183b7a;
+    }
+
+    .image-demo svg{
+      width:min(360px,100%);
+      height:auto;
+    }
+
+    canvas{
+      width:100%;
+      max-width:700px;
+      height:330px;
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:14px;
+      display:block;
+    }
+
+    .callout{
+      border-left:5px solid var(--primary);
+      background:var(--surface-2);
+      padding:14px 16px;
+      border-radius:10px;
+      margin:16px 0;
+    }
+
+    .challenge{
+      border:1px solid color-mix(in srgb, var(--accent) 45%, var(--border));
+      background:color-mix(in srgb, var(--accent) 8%, var(--surface));
+      border-radius:14px;
+      padding:18px;
+      margin-top:18px;
+    }
+
+    .checklist{
+      list-style:none;
+      padding:0;
+      margin:12px 0 0;
+    }
+
+    .checklist li{
+      margin:9px 0;
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+    }
+
+    .checklist input{
+      width:auto;
+      margin-top:5px;
+    }
+
+    .quiz-question{
+      padding:18px 0;
+      border-bottom:1px solid var(--border);
+    }
+
+    .quiz-question:last-child{border-bottom:0}
+    .quiz-question label{font-weight:normal;display:block;margin:7px 0}
+    .quiz-question input[type="radio"]{width:auto;margin-right:8px}
+
+    dialog{
+      border:0;
+      border-radius:18px;
+      padding:0;
+      max-width:520px;
+      width:calc(100% - 30px);
+      box-shadow:0 25px 70px rgba(0,0,0,.35);
+      background:var(--surface);
+      color:var(--text);
+    }
+
+    dialog::backdrop{background:rgba(5,15,35,.62)}
+    .dialog-body{padding:26px}
+    .dialog-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}
+
+    footer{
+      text-align:center;
+      padding:28px 20px 55px;
+      color:var(--muted);
+    }
+
+    .small{font-size:.9rem;color:var(--muted)}
+
+    @media (max-width:900px){
+      .hero-card{grid-template-columns:1fr}
+      .grid.three,.grid.four{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .nav{align-items:flex-start}
+      .nav-links{display:none}
+    }
+
+    @media (max-width:650px){
+      .hero-card{padding:28px 22px}
+      .grid.two,.grid.three,.grid.four{grid-template-columns:1fr}
+      .section-card{padding:22px}
+      .form-row{grid-template-columns:1fr}
+      .progress-row{align-items:flex-start;flex-direction:column}
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <nav class="nav">
+      <div class="brand">GUI · Desarrollo WEB</div>
+      <div class="nav-links">
+        <a href="#gui">GUI</a>
+        <a href="#texto">Texto</a>
+        <a href="#imagenes">Imágenes</a>
+        <a href="#tablas">Tablas</a>
+        <a href="#botones">Botones</a>
+        <a href="#control">Control</a>
+        <a href="#menus">Menús</a>
+        <a href="#ventanas">Ventanas</a>
+        <a href="#graficos">Gráficos</a>
+        <a href="#proyecto">Proyecto</a>
+      </div>
+      <button class="btn secondary" id="themeBtn" type="button">Modo oscuro</button>
+    </nav>
+  </header>
+
+  <div class="hero">
+    <div class="hero-card">
+      <div>
+        <span class="tag" style="background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.25);color:white;">Curso interactivo</span>
+        <h1>Aprendamos GUI para aplicaciones WEB</h1>
+        <p>
+          Aprende paso a paso cómo usar texto, imágenes, tablas, gráficos, botones, menús y ventanas.
+          Practica además cómo JavaScript permite que una interfaz tome decisiones.
+        </p>
+        <div class="hero-actions">
+          <a class="btn" href="#gui" style="background:white;color:#173b7c;text-decoration:none;">Comenzar</a>
+          <a class="btn secondary" href="#proyecto" style="text-decoration:none;">Ir al proyecto final</a>
+        </div>
+      </div>
+
+      <div class="hero-visual" aria-label="Ilustración de una interfaz web">
+        <div class="mock-window">
+          <div class="mock-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+          <div class="mock-body">
+            <span class="mock-chip">Interfaz gráfica</span>
+            <div class="mock-title"></div>
+            <div class="mock-line"></div>
+            <div class="mock-line short"></div>
+            <div class="mock-buttons">
+              <div class="mock-button"></div>
+              <div class="mock-button alt"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <div class="progress-wrap">
+      <div class="progress-row">
+        <div>
+          <strong>Avance de la lección</strong>
+          <div class="small">Marca cada tema cuando termines la práctica.</div>
+        </div>
+        <strong id="progressText">0%</strong>
+      </div>
+      <div class="progress"><div id="progressBar"></div></div>
+    </div>
+
+    <section id="gui">
+      <div class="section-card">
+        <div class="kicker">Tema 1</div>
+        <h2>¿Qué es una GUI?</h2>
+        <p class="lead">
+          GUI significa <strong>Interfaz Gráfica de Usuario</strong>. Es la parte visual de una aplicación con la que una persona
+          interactúa: textos, imágenes, botones, formularios, menús, tablas, gráficos y ventanas.
+        </p>
+
+        <div class="grid three">
+          <div class="card">
+            <h3>HTML</h3>
+            <p>Construye la estructura de la página: títulos, párrafos, botones, tablas, formularios y demás elementos.</p>
+          </div>
+          <div class="card">
+            <h3>CSS</h3>
+            <p>Controla la apariencia: tamaños, espacios, bordes, tipografía, distribución y adaptación a diferentes pantallas.</p>
+          </div>
+          <div class="card">
+            <h3>JavaScript</h3>
+            <p>Agrega comportamiento: responder a botones, validar datos, tomar decisiones y modificar la interfaz.</p>
+          </div>
+        </div>
+
+        <div class="callout">
+          <strong>Idea clave:</strong> HTML crea, CSS presenta y JavaScript hace que la interfaz responda.
+        </div>
+
+        <label><input class="topic-check" type="checkbox"> Comprendí qué es una GUI.</label>
+      </div>
+    </section>
+
+    <section id="texto">
+      <div class="section-card">
+        <div class="kicker">Tema 2</div>
+        <h2>Texto</h2>
+        <p class="lead">El texto permite comunicar información y organizar visualmente el contenido.</p>
+
+        <div class="grid two">
+          <div>
+            <h3>Ejemplo</h3>
+            <div class="demo">
+              <h1 style="margin-top:0">Mi tienda tecnológica</h1>
+              <h3>Productos disponibles</h3>
+              <p>Encuentra dispositivos y accesorios para tus necesidades.</p>
+              <strong>Oferta especial esta semana.</strong>
+            </div>
+          </div>
+          <div>
+            <h3>Código HTML</h3>
+            <div class="code">&lt;h1&gt;Mi tienda tecnológica&lt;/h1&gt;
+&lt;h3&gt;Productos disponibles&lt;/h3&gt;
+&lt;p&gt;Encuentra dispositivos y accesorios.&lt;/p&gt;
+&lt;strong&gt;Oferta especial esta semana.&lt;/strong&gt;</div>
+          </div>
+        </div>
+
+        <div class="challenge">
+          <strong>Reto:</strong> crea un título, un subtítulo, dos párrafos y una frase importante en negrita.
+        </div>
+
+        <label><input class="topic-check" type="checkbox"> Terminé la práctica de texto.</label>
+      </div>
+    </section>
+
+    <section id="imagenes">
+      <div class="section-card">
+        <div class="kicker">Tema 3</div>
+        <h2>Imágenes</h2>
+        <p class="lead">Las imágenes deben apoyar el mensaje y no estar colocadas solamente como decoración.</p>
+
+        <div class="grid two">
+          <div class="image-demo">
+            <svg viewBox="0 0 500 300" role="img" aria-label="Ilustración de una computadora">
+              <rect x="70" y="40" width="360" height="200" rx="18" fill="#1957d2"/>
+              <rect x="90" y="60" width="320" height="160" rx="10" fill="#ffffff"/>
+              <rect x="220" y="240" width="60" height="25" rx="6" fill="#183b7a"/>
+              <rect x="170" y="265" width="160" height="16" rx="8" fill="#183b7a"/>
+              <circle cx="250" cy="140" r="42" fill="#e8f0ff"/>
+              <path d="M230 142h40M250 122v40" stroke="#1957d2" stroke-width="12" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div>
+            <h3>Código HTML</h3>
+            <div class="code">&lt;img
+  src="imagenes/computadora.jpg"
+  alt="Computadora de escritorio"
+  width="300"
+&gt;</div>
+            <p><strong>src:</strong> indica dónde está la imagen.</p>
+            <p><strong>alt:</strong> describe la imagen si no se puede ver.</p>
+            <p><strong>width:</strong> define un ancho básico.</p>
+          </div>
+        </div>
+
+        <label><input class="topic-check" type="checkbox"> Terminé la práctica de imágenes.</label>
+      </div>
+    </section>
+
+    <section id="tablas">
+      <div class="section-card">
+        <div class="kicker">Tema 4</div>
+        <h2>Tablas</h2>
+        <p class="lead">Las tablas sirven para presentar datos que necesitan filas y columnas.</p>
+
+        <div class="grid two">
+          <div>
+            <table>
+              <thead>
+                <tr><th>Producto</th><th>Precio</th><th>Cantidad</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Teclado</td><td>₡8 000</td><td>5</td></tr>
+                <tr><td>Mouse</td><td>₡5 000</td><td>10</td></tr>
+                <tr><td>Audífonos</td><td>₡12 500</td><td>7</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="code">&lt;table&gt;
+  &lt;tr&gt;
+    &lt;th&gt;Producto&lt;/th&gt;
+    &lt;th&gt;Precio&lt;/th&gt;
+  &lt;/tr&gt;
+
+  &lt;tr&gt;
+    &lt;td&gt;Teclado&lt;/td&gt;
+    &lt;td&gt;₡8000&lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;</div>
+        </div>
+
+        <div class="challenge"><strong>Reto:</strong> crea una tabla con cinco productos, su precio y cantidad.</div>
+        <label><input class="topic-check" type="checkbox"> Terminé la práctica de tablas.</label>
+      </div>
+    </section>
+
+    <section id="botones">
+      <div class="section-card">
+        <div class="kicker">Tema 5</div>
+        <h2>Botones e interacción</h2>
+        <p class="lead">Los botones permiten que el usuario provoque una acción dentro de la aplicación.</p>
+
+        <div class="grid two">
+          <div>
+            <h3>Pruébalo</h3>
+            <div class="demo">
+              <p id="buttonMessage">Todavía no has presionado el botón.</p>
+              <button class="btn" type="button" onclick="cambiarMensaje()">Presionar</button>
+            </div>
+          </div>
+
+          <div>
+            <h3>JavaScript</h3>
+            <div class="code">function cambiarMensaje() {
+  document.getElementById("buttonMessage")
+    .textContent = "¡El botón fue presionado!";
+}</div>
+          </div>
+        </div>
+
+        <div class="callout">
+          Cuando el usuario hace clic, ocurre un <strong>evento</strong>. JavaScript puede responder a ese evento.
+        </div>
+
+        <label><input class="topic-check" type="checkbox"> Terminé la práctica de botones.</label>
+      </div>
+    </section>
+
+    <section id="control">
+      <div class="section-card">
+        <div class="kicker">Tema 6</div>
+        <h2>Estructuras de control: if / else</h2>
+        <p class="lead">
+          Una aplicación puede tomar decisiones. La condición se evalúa y el programa ejecuta una acción u otra.
+        </p>
+
+        <div class="grid two">
+          <div>
+            <h3>Probador de calificaciones</h3>
+            <div class="demo">
+              <label for="nota">Digite una nota de 0 a 100</label>
+              <div class="form-row">
+                <input id="nota" type="number" min="0" max="100" placeholder="Ejemplo: 85">
+                <button class="btn success" type="button" onclick="evaluarNota()">Evaluar</button>
+              </div>
+              <div class="result" id="notaResultado">Aquí aparecerá el resultado.</div>
+            </div>
+          </div>
+
+          <div>
+            <div class="code">if (nota &gt;= 90) {
+  resultado = "Excelente";
+}
+else if (nota &gt;= 80) {
+  resultado = "Muy bueno";
+}
+else if (nota &gt;= 70) {
+  resultado = "Aprobado";
+}
+else {
+  resultado = "Reprobado";
+}</div>
+          </div>
+        </div>
+
+        <div class="grid four" style="margin-top:18px">
+          <div class="card"><strong>&gt;</strong><br>Mayor que</div>
+          <div class="card"><strong>&lt;</strong><br>Menor que</div>
+          <div class="card"><strong>&gt;=</strong><br>Mayor o igual</div>
+          <div class="card"><strong>&lt;=</strong><br>Menor o igual</div>
+        </div>
+
+        <div class="challenge">
+          <strong>Reto:</strong> crea una aplicación que reciba una edad y muestre si la persona es menor o mayor de edad.
+        </div>
+
+        <label><input class="topic-check" type="checkbox"> Terminé la práctica de estructuras de control.</label>
+      </div>
+    </section>
+
+    <section id="menus">
+      <div class="section-card">
+        <div class="kicker">Tema 7</div>
+        <h2>Menús</h2>
+        <p class="lead">Los menús organizan la navegación y permiten ir a diferentes partes de una página o aplicación.</p>
+
+        <div class="demo-menu">
+          <a href="#menus">Inicio</a>
+          <a href="#tablas">Productos</a>
+          <a href="#graficos">Estadísticas</a>
+          <a href="#proyecto">Proyecto</a>
+        </div>
+
+        <div class="code" style="margin-top:18px">&lt;nav&gt;
+  &lt;a href="#inicio"&gt;Inicio&lt;/a&gt;
+  &lt;a href="#productos"&gt;Productos&lt;/a&gt;
+  &lt;a href="#contacto"&gt;Contacto&lt;/a&gt;
+&lt;/nav&gt;</div>
+
+        <label><input class="topic-check" type="checkbox"> Terminé la práctica de menús.</label>
+      </div>
+    </section>
+
+    <section id="ventanas">
+      <div class="section-card">
+        <div class="kicker">Tema 8</div>
+        <h2>Ventanas y mensajes</h2>
+        <p class="lead">
+          Una interfaz puede mostrar avisos, confirmaciones o ventanas emergentes. Conviene usarlas cuando la información necesita la atención del usuario.
+        </p>
+
+        <div class="grid three">
+          <div class="card">
+            <h3>alert()</h3>
+            <p>Muestra un mensaje sencillo.</p>
+            <button class="btn" type="button" onclick="alert('Bienvenido a la aplicación')">Probar alert</button>
+          </div>
+          <div class="card">
+            <h3>confirm()</h3>
+            <p>Permite aceptar o cancelar.</p>
+            <button class="btn warning" type="button" onclick="probarConfirm()">Probar confirm</button>
+          </div>
+          <div class="card">
+            <h3>&lt;dialog&gt;</h3>
+            <p>Crea una ventana dentro de la propia página.</p>
+            <button class="btn success" type="button" onclick="abrirDialogo()">Abrir ventana</button>
+          </div>
+        </div>
+
+        <div class="result" id="confirmResult">Resultado de la confirmación.</div>
+
+        <dialog id="miDialogo">
+          <div class="dialog-body">
+            <h2>Ventana de ejemplo</h2>
+            <p>Esta ventana forma parte de la interfaz de la página y puede contener texto, botones, formularios u otros elementos.</p>
+            <div class="dialog-actions">
+              <button class="btn" type="button" onclick="cerrarDialogo()">Cerrar</button>
+            </div>
+          </div>
+        </dialog>
+
+        <label><input class="topic-check" type="checkbox"> Terminé la práctica de ventanas.</label>
+      </div>
+    </section>
+
+    <section id="graficos">
+      <div class="section-card">
+        <div class="kicker">Tema 9</div>
+        <h2>Gráficos</h2>
+        <p class="lead">
+          Un gráfico ayuda a interpretar datos visualmente. Este ejemplo está construido con JavaScript puro, sin bibliotecas externas.
+        </p>
+
+        <div class="grid two">
+          <div>
+            <canvas id="salesChart" width="700" height="330"></canvas>
+          </div>
+          <div>
+            <h3>Datos utilizados</h3>
+            <table>
+              <tr><th>Producto</th><th>Unidades</th></tr>
+              <tr><td>Teclados</td><td>10</td></tr>
+              <tr><td>Mouse</td><td>20</td></tr>
+              <tr><td>Monitores</td><td>5</td></tr>
+              <tr><td>Audífonos</td><td>15</td></tr>
+            </table>
+            <p class="small">El mismo conjunto de datos puede mostrarse como tabla y como gráfico.</p>
+          </div>
+        </div>
+
+        <label><input class="topic-check" type="checkbox"> Terminé la práctica de gráficos.</label>
+      </div>
+    </section>
+
+    <section id="proyecto">
+      <div class="section-card">
+        <div class="kicker">Proyecto integrador</div>
+        <h2>Sistema de ventas de una tienda tecnológica</h2>
+        <p class="lead">
+          Construye una pequeña aplicación que integre todo lo aprendido en lugar de hacer ejercicios separados.
+        </p>
+
+        <div class="grid two">
+          <div>
+            <h3>Debe incluir</h3>
+            <ul class="checklist">
+              <li>☐ Encabezado y texto descriptivo.</li>
+              <li>☐ Menú de navegación.</li>
+              <li>☐ Al menos dos imágenes.</li>
+              <li>☐ Tabla de productos y precios.</li>
+              <li>☐ Entrada para elegir un producto y cantidad.</li>
+              <li>☐ Botón para calcular una compra.</li>
+              <li>☐ Una condición con <code>if / else</code>.</li>
+              <li>☐ Una ventana de confirmación.</li>
+              <li>☐ Un gráfico con datos de productos.</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3>Mini simulador</h3>
+            <div class="demo">
+              <label for="producto">Producto</label>
+              <select id="producto">
+                <option value="5000">Mouse - ₡5 000</option>
+                <option value="8000">Teclado - ₡8 000</option>
+                <option value="12500">Audífonos - ₡12 500</option>
+              </select>
+
+              <label for="cantidad" style="display:block;margin-top:12px">Cantidad</label>
+              <input id="cantidad" type="number" min="1" value="1">
+
+              <button class="btn success" type="button" onclick="calcularCompra()" style="margin-top:12px">
+                Calcular compra
+              </button>
+
+              <div class="result" id="compraResultado">
+                El resultado de la compra aparecerá aquí.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout">
+          <strong>Laboriosidad:</strong> se demuestra al intentar resolver problemas, revisar errores, pedir ayuda cuando es necesaria,
+          corregir el trabajo y terminar el proyecto de forma ordenada.
+        </div>
+
+        <label><input class="topic-check" type="checkbox"> Terminé el proyecto integrador.</label>
+      </div>
+    </section>
+
+    <section id="quiz">
+      <div class="section-card">
+        <div class="kicker">Comprobación</div>
+        <h2>Mini evaluación</h2>
+        <p class="lead">Responde y presiona “Revisar respuestas”.</p>
+
+        <div class="quiz-question">
+          <strong>1. ¿Qué lenguaje se usa principalmente para construir la estructura de una página web?</strong>
+          <label><input type="radio" name="q1" value="a"> CSS</label>
+          <label><input type="radio" name="q1" value="b"> HTML</label>
+          <label><input type="radio" name="q1" value="c"> JavaScript</label>
+        </div>
+
+        <div class="quiz-question">
+          <strong>2. ¿Qué elemento permite al usuario provocar una acción?</strong>
+          <label><input type="radio" name="q2" value="a"> Botón</label>
+          <label><input type="radio" name="q2" value="b"> Párrafo</label>
+          <label><input type="radio" name="q2" value="c"> Encabezado</label>
+        </div>
+
+        <div class="quiz-question">
+          <strong>3. ¿Para qué se utiliza if / else?</strong>
+          <label><input type="radio" name="q3" value="a"> Para insertar imágenes</label>
+          <label><input type="radio" name="q3" value="b"> Para crear tablas</label>
+          <label><input type="radio" name="q3" value="c"> Para tomar decisiones</label>
+        </div>
+
+        <div class="quiz-question">
+          <strong>4. ¿Qué componente es apropiado para organizar datos en filas y columnas?</strong>
+          <label><input type="radio" name="q4" value="a"> Tabla</label>
+          <label><input type="radio" name="q4" value="b"> Ventana</label>
+          <label><input type="radio" name="q4" value="c"> Menú</label>
+        </div>
+
+        <div class="quiz-question">
+          <strong>5. ¿Cuál es la función principal de CSS?</strong>
+          <label><input type="radio" name="q5" value="a"> Definir la presentación visual</label>
+          <label><input type="radio" name="q5" value="b"> Guardar archivos</label>
+          <label><input type="radio" name="q5" value="c"> Crear una base de datos</label>
+        </div>
+
+        <button class="btn" type="button" onclick="revisarQuiz()">Revisar respuestas</button>
+        <div class="result" id="quizResult">Aún no has revisado la evaluación.</div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Material didáctico para el aprendizaje de interfaces gráficas de usuario en desarrollo WEB.
+  </footer>
+
+  <script>
+    function cambiarMensaje(){
+      document.getElementById("buttonMessage").textContent = "¡El botón fue presionado! JavaScript respondió al evento.";
+    }
+
+    function evaluarNota(){
+      const entrada = document.getElementById("nota");
+      const salida = document.getElementById("notaResultado");
+      const nota = Number(entrada.value);
+
+      if(entrada.value === "" || nota < 0 || nota > 100){
+        salida.textContent = "Digite una nota válida entre 0 y 100.";
+        return;
+      }
+
+      let resultado = "";
+      if(nota >= 90){
+        resultado = "Excelente";
+      } else if(nota >= 80){
+        resultado = "Muy bueno";
+      } else if(nota >= 70){
+        resultado = "Aprobado";
+      } else {
+        resultado = "Reprobado";
+      }
+
+      salida.innerHTML = "<strong>Resultado:</strong> " + resultado;
+    }
+
+    function probarConfirm(){
+      const acepto = confirm("¿Desea continuar con la práctica?");
+      document.getElementById("confirmResult").textContent =
+        acepto ? "El usuario eligió Aceptar." : "El usuario eligió Cancelar.";
+    }
+
+    function abrirDialogo(){
+      document.getElementById("miDialogo").showModal();
+    }
+
+    function cerrarDialogo(){
+      document.getElementById("miDialogo").close();
+    }
+
+    function calcularCompra(){
+      const precio = Number(document.getElementById("producto").value);
+      const cantidad = Number(document.getElementById("cantidad").value);
+      const salida = document.getElementById("compraResultado");
+
+      if(!cantidad || cantidad < 1){
+        salida.textContent = "Digite una cantidad válida.";
+        return;
+      }
+
+      const subtotal = precio * cantidad;
+      let descuento = 0;
+
+      if(subtotal >= 50000){
+        descuento = subtotal * 0.10;
+      }
+
+      const total = subtotal - descuento;
+
+      salida.innerHTML =
+        "<strong>Subtotal:</strong> ₡" + subtotal.toLocaleString("es-CR") +
+        "<br><strong>Descuento:</strong> ₡" + descuento.toLocaleString("es-CR") +
+        "<br><strong>Total:</strong> ₡" + total.toLocaleString("es-CR") +
+        (descuento > 0 ? "<br>Se aplicó un 10% de descuento." : "<br>No aplica descuento.");
+    }
+
+    function revisarQuiz(){
+      const respuestas = {q1:"b", q2:"a", q3:"c", q4:"a", q5:"a"};
+      let correctas = 0;
+      let respondidas = 0;
+
+      Object.keys(respuestas).forEach(q => {
+        const elegida = document.querySelector('input[name="' + q + '"]:checked');
+        if(elegida){
+          respondidas++;
+          if(elegida.value === respuestas[q]) correctas++;
+        }
+      });
+
+      const salida = document.getElementById("quizResult");
+      if(respondidas < 5){
+        salida.textContent = "Responde las 5 preguntas antes de revisar.";
+        return;
+      }
+
+      salida.innerHTML = "<strong>Resultado:</strong> " + correctas + " de 5 respuestas correctas.";
+    }
+
+    const checks = Array.from(document.querySelectorAll(".topic-check"));
+    const progressBar = document.getElementById("progressBar");
+    const progressText = document.getElementById("progressText");
+
+    function actualizarProgreso(){
+      const completados = checks.filter(c => c.checked).length;
+      const porcentaje = Math.round((completados / checks.length) * 100);
+      progressBar.style.width = porcentaje + "%";
+      progressText.textContent = porcentaje + "%";
+    }
+
+    checks.forEach(c => c.addEventListener("change", actualizarProgreso));
+
+    document.getElementById("themeBtn").addEventListener("click", function(){
+      document.body.classList.toggle("dark");
+      this.textContent = document.body.classList.contains("dark") ? "Modo claro" : "Modo oscuro";
+      dibujarGrafico();
+    });
+
+    function dibujarGrafico(){
+      const canvas = document.getElementById("salesChart");
+      const ctx = canvas.getContext("2d");
+      const datos = [10,20,5,15];
+      const etiquetas = ["Teclados","Mouse","Monitores","Audífonos"];
+
+      const dark = document.body.classList.contains("dark");
+      const texto = dark ? "#f8fafc" : "#172033";
+      const linea = dark ? "#526079" : "#d9e1ec";
+      const barra = dark ? "#74a6ff" : "#1957d2";
+
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.font = "15px Arial";
+      ctx.fillStyle = texto;
+      ctx.strokeStyle = linea;
+      ctx.lineWidth = 1;
+
+      const left = 70;
+      const bottom = 275;
+      const chartHeight = 220;
+      const barWidth = 85;
+      const gap = 55;
+      const max = 20;
+
+      ctx.beginPath();
+      ctx.moveTo(left,35);
+      ctx.lineTo(left,bottom);
+      ctx.lineTo(650,bottom);
+      ctx.stroke();
+
+      for(let i=0;i<=4;i++){
+        const value = i*5;
+        const y = bottom - (value/max)*chartHeight;
+        ctx.strokeStyle = linea;
+        ctx.beginPath();
+        ctx.moveTo(left,y);
+        ctx.lineTo(650,y);
+        ctx.stroke();
+
+        ctx.fillStyle = texto;
+        ctx.fillText(String(value),32,y+5);
+      }
+
+      datos.forEach((v,i)=>{
+        const x = left + 55 + i*(barWidth+gap);
+        const h = (v/max)*chartHeight;
+        const y = bottom-h;
+
+        ctx.fillStyle = barra;
+        ctx.fillRect(x,y,barWidth,h);
+
+        ctx.fillStyle = texto;
+        ctx.textAlign = "center";
+        ctx.fillText(String(v),x+barWidth/2,y-10);
+        ctx.fillText(etiquetas[i],x+barWidth/2,bottom+25);
+      });
+
+      ctx.textAlign = "start";
+    }
+
+    dibujarGrafico();
+  </script>
+</body>
+</html>
